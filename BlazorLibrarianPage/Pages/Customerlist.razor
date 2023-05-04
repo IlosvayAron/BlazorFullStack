@@ -1,0 +1,56 @@
+﻿@page "/customerlist"
+@inject HttpClient Http
+
+<PageTitle>CustomerList</PageTitle>
+
+<h1>List of Customers</h1>
+
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-hover table-border">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Reading number</th>
+                <th>Date of birth</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.Name</td>
+                    <td>@customer.Address</td>
+                    <td>@customer.ReadingNumber</td>
+                    <td>@customer.DateOfBirth.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private CustomerList[]? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await Http.GetFromJsonAsync<CustomerList[]>("sample-data/customer.json");
+    }
+
+    public class CustomerList
+    {
+        public string Name { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? ReadingNumber { get; set; }
+
+        public DateTime DateOfBirth { get; set; }
+    }
+}

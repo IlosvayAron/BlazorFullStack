@@ -1,0 +1,20 @@
+﻿[
+  {
+    "Name": "Name1",
+    "Address": "Wailuku, 473 Stratford Drive",
+    "ReadingNumber": "13",
+    "DateOfBirth": "2018-05-01"
+  },
+  {
+    "Name": "Name2",
+    "Address": "Ransom Canyon, 672 Emma Street",
+    "ReadingNumber": "234",
+    "DateOfBirth": "2018-05-02"
+  },
+  {
+    "Name": "Name3",
+    "Address": "Saginaw, 348 Robinson Court",
+    "ReadingNumber": "25",
+    "DateOfBirth": "2018-05-03"
+  }
+]
