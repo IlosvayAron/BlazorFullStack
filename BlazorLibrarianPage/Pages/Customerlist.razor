@@ -19,6 +19,7 @@ else
                 <th>Address</th>
                 <th>Reading number</th>
                 <th>Date of birth</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -29,14 +30,16 @@ else
                     <td>@customer.Address</td>
                     <td>@customer.ReadingNumber</td>
                     <td>@customer.DateOfBirth.ToShortDateString()</td>
+                    <td><a href="customer/@customer.Id" class="btn btn-primary">Details</a></td>
                 </tr>
             }
         </tbody>
     </table>
+    <a href="addcustomer" class="btn btn-primary">Add Customer</a>
 }
 
 @code {
-    private CustomerList[]? customers;
+    public CustomerList[]? customers;
 
     protected override async Task OnInitializedAsync()
     {
@@ -45,6 +48,8 @@ else
 
     public class CustomerList
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string? Address { get; set; }
