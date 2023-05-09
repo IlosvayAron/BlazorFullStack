@@ -20,6 +20,7 @@ else
                 <th>Publisher</th>
                 <th>Inventory number</th>
                 <th>Year of publishing</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +32,7 @@ else
                     <td>@book.Publisher</td>
                     <td>@book.InventoryNumber</td>
                     <td>@book.PublishYear</td>
+                    <td><a href="book/@book.Id" class="btn btn-primary">Details</a></td>
                 </tr>
             }
         </tbody>
@@ -47,6 +49,8 @@ else
 
     public class BookList
     {
+        public int Id { get; set; }
+
         public string? Title { get; set; }
 
         public string? Author { get; set; }

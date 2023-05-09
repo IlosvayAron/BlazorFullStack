@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 
 namespace BlazorLibrarianPage.Pages
 {
-    public partial class CustomerDetails
+    public partial class BookDetails
     {
         [Parameter]
         public int Id { get; set; }
