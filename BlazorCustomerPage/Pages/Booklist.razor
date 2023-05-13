@@ -1,0 +1,64 @@
+﻿@page "/booklist"
+@inject HttpClient Http
+
+<PageTitle>Booklist</PageTitle>
+
+<h1>List of Books</h1>
+
+
+@if (books == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-hover table-border">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Inventory number</th>
+                <th>Year of publishing</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in books)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.Publisher</td>
+                    <td>@book.InventoryNumber</td>
+                    <td>@book.PublishYear</td>
+                    <td><a href="book/@book.Id" class="btn btn-primary">Details</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private BookList[]? books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await Http.GetFromJsonAsync<BookList[]>("sample-data/book.json");
+    }
+
+    public class BookList
+    {
+        public int Id { get; set; }
+
+        public string? Title { get; set; }
+
+        public string? Author { get; set; }
+
+        public string? Publisher { get; set; }
+
+        public int InventoryNumber { get; set; }
+
+        public int PublishYear { get; set; }
+    }
+}

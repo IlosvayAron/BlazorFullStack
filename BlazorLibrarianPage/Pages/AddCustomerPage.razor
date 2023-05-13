@@ -1,0 +1,65 @@
+﻿@page "/addcustomer"
+@inject HttpClient Http
+@using System.Text.Json;
+@using System.ComponentModel.DataAnnotations;
+@using static BlazorLibrarianPage.Pages.Customerlist;
+
+<h3>AddCustomer</h3>
+
+<EditForm Model="@customer" OnValidSubmit="@AddCustomer">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText class="form-control" id="name" @bind-Value="customer.Name" />
+        <ValidationMessage For="() => customer.Name" />
+    </div>
+    <div class="form-group">
+        <label for="address">Address:</label>
+        <InputText class="form-control" id="address" @bind-Value="customer.Address" />
+    </div>
+    <div class="form-group">
+        <label for="readingNumber">Reading Number:</label>
+        <InputText class="form-control" id="readingNumber" @bind-Value="customer.ReadingNumber" />
+        <ValidationMessage For="() => customer.ReadingNumber" />
+    </div>
+    <div class="form-group">
+        <label for="dateOfBirth">Date of Birth:</label>
+        <InputDate class="form-control" id="dateOfBirth" @bind-Value="customer.DateOfBirth" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Customer</button>
+</EditForm>
+
+@code {
+    private Customer customer = new Customer();
+
+    public class Customer
+    {
+        [MaxLength(15, ErrorMessage="Max 15 characters.")]
+        [Required(ErrorMessage = "Please enter a name.")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name can only contain alphabetical characters.")]
+        public string Name { get; set; }
+        public string Address { get; set; }
+        [RegularExpression("^[0-9]*$", ErrorMessage = "The {0} field must contain only numbers.")]
+        public string ReadingNumber { get; set; }
+        public DateTime DateOfBirth { get; set; }
+    }
+
+    // In your AddCustomer page
+    private async Task AddCustomer()
+    {
+        // Read the existing customers from the JSON file
+        string json = await File.ReadAllTextAsync("sample-data/customer.json");
+        var customers = JsonSerializer.Deserialize<Customer[]>(json);
+
+        // Add the new customer to the array
+        Array.Resize(ref customers, customers.Length + 1);
+        customers[customers.Length - 1] = customer;
+
+        // Serialize the updated array back to JSON
+        json = JsonSerializer.Serialize(customers);
+
+        // Write the JSON back to the file
+        await File.WriteAllTextAsync("sample-data/customer.json", json);
+    }
+
+}

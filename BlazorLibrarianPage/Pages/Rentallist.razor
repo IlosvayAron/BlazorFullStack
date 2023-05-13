@@ -1,0 +1,84 @@
+﻿@page "/rentallist"
+@inject HttpClient Http
+
+<PageTitle>Rentallist</PageTitle>
+
+<h1>List of Rentals</h1>
+
+
+@if (rentals == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-hover table-border">
+        <thead>
+            <tr>
+                <th>Reading number</th>
+                <th>Inventory number</th>
+                <th>Time of rental</th>
+                <th>Returnal deadline</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var (rental, customer, book) in rentals.Zip(customers, books))
+            {
+                <tr>
+                    <td>@customer.ReadingNumber</td>
+                    <td>@book.InventoryNumber</td>
+                    <td>@rental.RentalTime.ToShortDateString()</td>
+                    <td>@rental.ReturnDeadline.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private RentalList[]? rentals;
+    private BookList[]? books;
+    private CustomerList[]? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        rentals = await Http.GetFromJsonAsync<RentalList[]>("sample-data/rental.json");
+        books = await Http.GetFromJsonAsync<BookList[]>("sample-data/book.json");
+        customers = await Http.GetFromJsonAsync<CustomerList[]>("sample-data/customer.json");
+    }
+
+    public class RentalList
+    {
+        public DateTime RentalTime { get; set; }
+
+        public DateTime ReturnDeadline { get; set; }
+    }
+
+    public class BookList
+    {
+        public int Id { get; set; }
+
+        public string? Title { get; set; }
+
+        public string? Author { get; set; }
+
+        public string? Publisher { get; set; }
+
+        public int InventoryNumber { get; set; }
+
+        public int PublishYear { get; set; }
+    }
+
+    public class CustomerList
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? ReadingNumber { get; set; }
+
+        public DateTime DateOfBirth { get; set; }
+    }
+}

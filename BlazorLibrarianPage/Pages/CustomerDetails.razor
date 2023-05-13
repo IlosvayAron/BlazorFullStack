@@ -1,0 +1,84 @@
+﻿@page "/customer/{id:int}"
+@inject HttpClient Http
+
+<PageTitle>CustomerDetails</PageTitle>
+
+@if (customers is null)
+{
+    <p>Loading..</p>
+}
+else
+{
+    CustomerList customer = null;
+
+    foreach (var c in customers)
+    {
+        if (c.Id == Id)
+        {
+            customer = c;
+            break;
+        }
+    }
+
+    if (customer is not null)
+    {
+        <h3>@customer.Name's details</h3>
+        <table class="table table-hover table-border">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Reading number</th>
+                    <th>Date of birth</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@customer.Name</td>
+                    <td>@customer.Address</td>
+                    <td>@customer.ReadingNumber</td>
+                    <td>@customer.DateOfBirth.ToShortDateString()</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Rental details</h3>
+        @foreach (var (rental, customerr, book) in rentals.Zip(customers, books))
+        {
+            @if (customerr.ReadingNumber == customer.ReadingNumber){
+                <table class="table table-hover table-border">
+                    <thead>
+                        <tr>
+                            <th>Reading number</th>
+                            <th>Inventory number</th>
+                            <th>Time of rental</th>
+                            <th>Returnal deadline</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@customerr.ReadingNumber</td>
+                            <td>@book.InventoryNumber</td>
+                            <td>@rental.RentalTime.ToShortDateString()</td>
+                            @if (rental.ReturnDeadline > DateTime.Today)
+                            {
+                                <td style="color: red">@rental.ReturnDeadline.ToShortDateString()</td>
+                            }
+                            else
+                            {
+                                <td>@rental.ReturnDeadline.ToShortDateString()</td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        }
+    }
+}
+
+<style>
+    th, td {
+    width: 25%;
+    text-align: left;
+    padding: 8px;
+}
+</style>

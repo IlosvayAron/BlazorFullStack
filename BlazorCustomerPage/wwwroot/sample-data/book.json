@@ -1,0 +1,26 @@
+﻿[
+  {
+    "Id": 1,
+    "Title": "Book1",
+    "Author": "Author1",
+    "Publisher": "Publisher1",
+    "InventoryNumber": 1,
+    "PublishYear": 2015
+  },
+  {
+    "Id": 2,
+    "Title": "Book2",
+    "Author": "Author2",
+    "Publisher": "Publisher2",
+    "InventoryNumber": 2,
+    "PublishYear": 2010
+  },
+  {
+    "Id": 3,
+    "Title": "Book3",
+    "Author": "Author3",
+    "Publisher": "Publisher3",
+    "InventoryNumber": 3,
+    "PublishYear": 2000
+  }
+]
