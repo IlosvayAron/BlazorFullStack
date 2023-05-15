@@ -44,8 +44,7 @@
         public DateTime DateOfBirth { get; set; }
     }
 
-    // In your AddCustomer page
-    private async Task AddCustomer()
+    public async Task AddCustomer()
     {
         // Read the existing customers from the JSON file
         string json = await File.ReadAllTextAsync("sample-data/customer.json");
@@ -61,5 +60,4 @@
         // Write the JSON back to the file
         await File.WriteAllTextAsync("sample-data/customer.json", json);
     }
-
 }

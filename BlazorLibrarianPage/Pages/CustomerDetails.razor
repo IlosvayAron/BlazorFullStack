@@ -59,7 +59,7 @@ else
                             <td>@customerr.ReadingNumber</td>
                             <td>@book.InventoryNumber</td>
                             <td>@rental.RentalTime.ToShortDateString()</td>
-                            @if (rental.ReturnDeadline > DateTime.Today)
+                            @if (rental.ReturnDeadline < DateTime.Today)
                             {
                                 <td style="color: red">@rental.ReturnDeadline.ToShortDateString()</td>
                             }
