@@ -1,79 +1,47 @@
 ﻿@page "/book/{id:int}"
-@inject HttpClient Http
+@using BlazorFullStack.Contract
+@using BlazorLibrarianPage.Services
+@inject IBookService BookService
 
 <PageTitle>BookDetails</PageTitle>
 
-@if (books == null)
+@if (Book == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    BookList book = null;
+    <h3>@Book.Title's details</h3>
+    <table class="table table-hover table-border">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Inventory number</th>
+                <th>Year of publishing</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Book.Title</td>
+                <td>@Book.Author</td>
+                <td>@Book.Publisher</td>
+                <td>@Book.InventoryNumber</td>
+                <td>@Book.PublishYear</td>
+            </tr>
+        </tbody>
+    </table>
+}
 
-    foreach (var c in books)
-    {
-        if (c.Id == Id)
-        {
-            book = c;
-            break;
-        }
-    }
+@code {
+    [Parameter]
+    public int Id { get; set; }
 
-    if (book is not null)
+    private Book? Book { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        <h3>@book.Title's details</h3>
-        <table class="table table-hover table-border">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Publisher</th>
-                    <th>Inventory number</th>
-                    <th>Year of publishing</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@book.Title</td>
-                    <td>@book.Author</td>
-                    <td>@book.Publisher</td>
-                    <td>@book.InventoryNumber</td>
-                    <td>@book.PublishYear</td>
-                </tr>
-            </tbody>
-        </table>
-        <h3>Rental details</h3>
-        @foreach (var (rental, customer, book_) in rentals.Zip(customers, books))
-        {
-            @if (book.InventoryNumber == book_.InventoryNumber){
-                <table class="table table-hover table-border">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Available</th>
-                            <th>Rented by</th>
-                            <th>Returnal deadline</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>@book_.Title</td>
-                            @if (rental.RentalTime == null)
-                            {
-                                <td>Yes</td>
-                                <td>-</td>
-                            }
-                            else
-                            {
-                                <td>No</td>
-                                <td>@customer.Name</td>
-                            }
-                            <td>@rental.ReturnDeadline.ToShortDateString()</td>
-                        </tr>
-                    </tbody>
-                </table>
-            }
-        }
+        Book = await BookService.GetBookByIdAsync(Id);
     }
 }

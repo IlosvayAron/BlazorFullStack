@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorFullStack.Contract\BlazorFullStack.Contract.csproj" />
+  </ItemGroup>
+
 </Project>
