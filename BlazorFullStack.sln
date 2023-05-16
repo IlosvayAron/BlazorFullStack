@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLibrarianPage", "Blaz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLibraryServer", "BlazorLibraryServer\BlazorLibraryServer.csproj", "{9A0FC099-5F8A-4CB2-A3B6-91BE47FC4FA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorFullStack.Contract", "BlazorFullStack.Contract\BlazorFullStack.Contract.csproj", "{E487E9DB-ED13-41F3-AF93-74882295D211}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFullStack.Contract", "BlazorFullStack.Contract\BlazorFullStack.Contract.csproj", "{E487E9DB-ED13-41F3-AF93-74882295D211}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
