@@ -1,0 +1,142 @@
+﻿@page "/filterbook"
+@inject HttpClient Http
+
+<PageTitle>Booklist</PageTitle>
+
+<h1>List of Books</h1>
+
+<h3>Filter by Customer Name</h3>
+<div class="form-inline mb-3">
+    <input type="text" class="form-control" @bind="@filterName" />
+    <button class="btn btn-primary ml-2" style="margin-top: 1em" @onclick="FilterBooks">Filter</button>
+</div>
+
+@if (filteredBooks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    CustomerList customer = null;
+
+    foreach (var c in customers)
+    {
+        if (c.Name == filterName)
+        {
+            customer = c;
+            break;
+        }
+    }
+    if (customer is not null)
+    {
+        <table class="table table-hover table-border">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Available</th>
+                    <th>Rented by</th>
+                    <th>Returnal deadline</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var (rental, customerr, book) in rentals.Zip(customers, books))
+                {
+                    @if (customerr.Name == customer.Name)
+                    {
+                        <tr>
+                            <td>@book.Title</td>
+                            @if (rental.RentalTime == null)
+                            {
+                                <td>Yes</td>
+                                <td>-</td>
+                            }
+                            else
+                            {
+                                <td>No</td>
+                                <td>@customerr.Name</td>
+                            }
+                            <td>@rental.ReturnDeadline.ToShortDateString()</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    private BookList[]? books;
+    private RentalList[]? rentals;
+    private CustomerList[]? customers;
+    private BookList[]? filteredBooks;
+    private string filterName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await Http.GetFromJsonAsync<BookList[]>("sample-data/book.json");
+        filteredBooks = books;
+        rentals = await Http.GetFromJsonAsync<RentalList[]>("sample-data/rental.json");
+        customers = await Http.GetFromJsonAsync<CustomerList[]>("sample-data/customer.json");
+    }
+
+    private void FilterBooks()
+    {
+        if (!string.IsNullOrWhiteSpace(filterName))
+        {
+            var filteredCustomer = customers.FirstOrDefault(c =>
+                c.Name.Equals(filterName, StringComparison.OrdinalIgnoreCase)
+            );
+
+            if (filteredCustomer != null)
+            {
+                filteredBooks = books.Where(b =>
+                    customers.Any(r =>
+                        r.Id == filteredCustomer.Id)
+                ).ToArray();
+            }
+            else
+            {
+                filteredBooks = Array.Empty<BookList>();
+            }
+        }
+        else
+        {
+            filteredBooks = books;
+        }
+    }
+
+    public class RentalList
+        {
+            public DateTime RentalTime { get; set; }
+
+            public DateTime ReturnDeadline { get; set; }
+        }
+
+        public class BookList
+        {
+            public int Id { get; set; }
+
+            public string? Title { get; set; }
+
+            public string? Author { get; set; }
+
+            public string? Publisher { get; set; }
+
+            public int InventoryNumber { get; set; }
+
+            public int PublishYear { get; set; }
+        }
+
+        public class CustomerList
+        {
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+
+            public string? Address { get; set; }
+
+            public string? ReadingNumber { get; set; }
+
+            public DateTime DateOfBirth { get; set; }
+        }
+}
