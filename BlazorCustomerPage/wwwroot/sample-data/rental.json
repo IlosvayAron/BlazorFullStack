@@ -1,0 +1,14 @@
+﻿[
+  {
+    "RentalTime": "2023-05-01",
+    "ReturnDeadline": "2023-07-01"
+  },
+  {
+    "RentalTime": "2022-10-14",
+    "ReturnDeadline": "2022-12-14"
+  },
+  {
+    "RentalTime": "2022-12-22",
+    "ReturnDeadline": "2023-02-22"
+  }
+]
