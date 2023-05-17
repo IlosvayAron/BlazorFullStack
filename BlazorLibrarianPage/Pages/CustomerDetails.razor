@@ -1,77 +1,67 @@
-﻿@page "/customer/{id:int}"
-@inject HttpClient Http
+﻿@page "/Customer/{id:int}"
+@using BlazorFullStack.Contract
+@using BlazorLibrarianPage.Services
+@inject ICustomerService CustomerService
 
 <PageTitle>CustomerDetails</PageTitle>
 
-@if (customers is null)
+@if (Customer is null)
 {
-    <p>Loading..</p>
+        <p>Loading..</p>
 }
 else
 {
-    CustomerList customer = null;
-
-    foreach (var c in customers)
+    <h3>@Customer.Name's details</h3>
+    <table class="table table-hover table-border">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Reading number</th>
+                <th>Date of birth</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Customer.Name</td>
+                <td>@Customer.Address</td>
+                <td>@Customer.ReadingNumber</td>
+                <td>@Customer.DateOfBirth.ToShortDateString()</td>
+            </tr>
+        </tbody>
+    </table>
+    @*<h3>Rental details</h3>
+    @foreach (var (rental, Customerr, book) in rentals.Zip(Customers, books))
     {
-        if (c.Id == Id)
+        @if (Customerr.ReadingNumber == Customer.ReadingNumber)
         {
-            customer = c;
-            break;
+            <table class="table table-hover table-border">
+                <thead>
+                    <tr>
+                        <th>Reading number</th>
+                        <th>Inventory number</th>
+                        <th>Time of rental</th>
+                        <th>Returnal deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Customerr.ReadingNumber</td>
+                        <td>@book.InventoryNumber</td>
+                        <td>@rental.RentalTime.ToShortDateString()</td>
+                        @if (rental.ReturnDeadline > DateTime.Today)
+                        {
+                            <td style="color: red">@rental.ReturnDeadline.ToShortDateString()</td>
+                        }
+                        else
+                        {
+                            <td>@rental.ReturnDeadline.ToShortDateString()</td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
         }
-    }
-
-    if (customer is not null)
-    {
-        <h3>@customer.Name's details</h3>
-        <table class="table table-hover table-border">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Reading number</th>
-                    <th>Date of birth</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@customer.Name</td>
-                    <td>@customer.Address</td>
-                    <td>@customer.ReadingNumber</td>
-                    <td>@customer.DateOfBirth.ToShortDateString()</td>
-                </tr>
-            </tbody>
-        </table>
-        <h3>Rental details</h3>
-        @foreach (var (rental, customerr, book) in rentals.Zip(customers, books))
-        {
-            @if (customerr.ReadingNumber == customer.ReadingNumber){
-                <table class="table table-hover table-border">
-                    <thead>
-                        <tr>
-                            <th>Reading number</th>
-                            <th>Inventory number</th>
-                            <th>Time of rental</th>
-                            <th>Returnal deadline</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>@customerr.ReadingNumber</td>
-                            <td>@book.InventoryNumber</td>
-                            <td>@rental.RentalTime.ToShortDateString()</td>
-                            @if (rental.ReturnDeadline < DateTime.Today)
-                            {
-                                <td style="color: red">@rental.ReturnDeadline.ToShortDateString()</td>
-                            }
-                            else
-                            {
-                                <td>@rental.ReturnDeadline.ToShortDateString()</td>
-                            }
-                        </tr>
-                    </tbody>
-                </table>
-            }
-        }
+    }*@
     }
 }
 
@@ -82,3 +72,15 @@ else
     padding: 8px;
 }
 </style>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Member? Customer { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Customer = await CustomerService.GetMemberByIdAsync(Id);
+    }
+}
