@@ -10,25 +10,25 @@
 
 <h3>AddCustomer</h3>
 
-<EditForm Model="@Customer" OnValidSubmit="@AddCustomerAsync">
+<EditForm EditContext="editContext" OnValidSubmit="@AddCustomerAsync">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label for="name">Name:</label>
-        <InputText class="form-control" id="name" @bind-Value="Customer.Name" />
+        <InputText class="form-control" id="name" @bind-Value="Name" />
         <ValidationMessage For="() => Customer.Name" />
     </div>
     <div class="form-group">
         <label for="address">Address:</label>
-        <InputText class="form-control" id="address" @bind-Value="Customer.Address" />
+        <InputText class="form-control" id="address" @bind-Value="Address" />
     </div>
     <div class="form-group">
         <label for="readingNumber">Reading Number:</label>
-        <InputNumber class="form-control" id="readingNumber" @bind-Value="Customer.ReadingNumber" />
+        <InputNumber class="form-control" id="readingNumber" @bind-Value="ReadingNumber" />
         <ValidationMessage For="() => Customer.ReadingNumber" />
     </div>
     <div class="form-group">
         <label for="dateOfBirth">Date of Birth:</label>
-        <InputDate class="form-control" id="dateOfBirth" @bind-Value="Customer.DateOfBirth" />
+        <InputDate class="form-control" id="dateOfBirth" @bind-Value="DateOfBirth" />
     </div>
     <button type="submit" class="btn btn-primary">Add Customer</button>
 </EditForm>
@@ -36,6 +36,17 @@
 @code {
     //private Customer Customer = new Customer();
     private Member? Customer { get; set; }
+    private EditContext editContext;
+
+    private string Name { get; set; }
+    private string Address { get; set; }
+    private int ReadingNumber { get; set; }
+    private DateTime DateOfBirth { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        editContext = new EditContext(Customer ?? new Member());
+    }
 
     //public class Customer
     //{
@@ -52,6 +63,14 @@
     // In your AddCustomer page
     private async Task AddCustomerAsync()
     {
+        Member member = new Member
+        {
+            Name = Name,
+            Address = Address,
+            ReadingNumber = ReadingNumber,
+            DateOfBirth = DateOfBirth
+        };
+
         await CustomerService.AddMemberAsync(Customer!);
         NavigationManager.NavigateTo("/customerlist");
 

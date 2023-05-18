@@ -3,6 +3,7 @@
 @using BlazorLibrarianPage.Services
 @inject IBookService BookService
 @inject IRentalService RentalService
+@inject NavigationManager NavigationManager
 
 <PageTitle>BookDetails</PageTitle>
 
@@ -35,57 +36,48 @@ else
     </table>
 
     <h4>Rental Details</h4>
-    <table class="table table-hover table-border">
-        <thead>
-            <tr>
-                <th>ReadingNumber</th>
-                <th>RentalTime</th>
-                <th>ReturnDeadline</th>
-                <th></th>
-            </tr>
-        </thead>
-        @if (Rental == null)
-        {
-            <tbody>
+    @if (Rental == null)
+    {
+        <EditForm EditContext="editContext" OnValidSubmit="@SubmitRentalDetails">
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label for="readingNumber">Reading Number:</label>
+                <InputNumber class="form-control" id="readingNumber" @bind-Value="ReadingNumber" />
+            </div>
+            <div class="form-group">
+                <label for="rentalTime">Rental Time:</label>
+                <InputDate class="form-control" id="rentalTime" @bind-Value="RentalTime" />
+            </div>
+            <div class="form-group">
+                <label for="returnDeadline">Return Deadline:</label>
+                <InputDate class="form-control" id="returnDeadline" @bind-Value="ReturnDeadline" />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    }
+    else
+    {
+        <table class="table table-hover table-border">
+            <thead>
                 <tr>
-                    <td>
-                        <div class="form-group">
-                        <label for="readingNumber">Reading Number:</label>
-                        <input type="text" class="form-control" id="readingNumber" @bind="@Rental.ReadingNumber" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <label for="rentalTime">Rental Time:</label>
-                            <input type="text" class="form-control" id="rentalTime" @bind="@Rental.RentalTime" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <label for="returnDeadline">Return Deadline:</label>
-                            <input type="text" class="form-control" id="returnDeadline" @bind="@Rental.ReturnDeadline" />
-                        </div>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary" style="margin-top: 1.5em" @*@onclick="SubmitRentalDetails"*@>Submit</button>
-                    </td>
+                    <th>ReadingNumber</th>
+                    <th>RentalTime</th>
+                    <th>ReturnDeadline</th>
+                    <th></th>
                 </tr>
-            </tbody>
-        }
-        else
-        {
+            </thead>
             <tbody>
                 <tr>
                     <td>@Rental.ReadingNumber</td>
                     <td>@Rental.RentalTime.ToShortDateString()</td>
                     <td>@Rental.ReturnDeadline.ToShortDateString()</td>
                     <td>
-                        <button type="button" class="btn btn-primary" @*@onclick="DeleteRentalDetails"*@>Delete</button>
+                        <button type="button" class="btn btn-primary" @onclick="DeleteRentalDetails">Delete</button>
                     </td>
                 </tr>
             </tbody>
-        }
-    </table>
+        </table>
+    }
 }
 
 @code {
@@ -95,10 +87,36 @@ else
 
     private Book? Book { get; set; }
     private Rental? Rental { get; set; }
+    private EditContext editContext;
+
+    private int ReadingNumber { get; set; }
+    private DateTime RentalTime { get; set; }
+    private DateTime ReturnDeadline { get; set; }
+    
 
     protected override async Task OnInitializedAsync()
     {
         Book = await BookService.GetBookByIdAsync(Id);
         Rental = await RentalService.GetRentalByIdAsync(Id);
+        editContext = new EditContext(Rental ?? new Rental());
+    }
+
+    private async Task SubmitRentalDetails()
+    {
+        Rental rental = new Rental
+        {
+            ReadingNumber = ReadingNumber,
+            RentalTime = RentalTime,
+            ReturnDeadline = ReturnDeadline
+        };
+
+        await RentalService.AddRentalAsync(rental);
+        NavigationManager.NavigateTo("booklist/");
+    }
+
+    private async Task DeleteRentalDetails()
+    {
+        await RentalService.DeleteRentalAsync(Rental.Id);
+        NavigationManager.NavigateTo("booklist/");
     }
 }
