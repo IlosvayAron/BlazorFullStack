@@ -2,6 +2,7 @@
 @using BlazorFullStack.Contract
 @using BlazorLibrarianPage.Services
 @inject IBookService BookService
+@inject IRentalService RentalService
 
 <PageTitle>BookDetails</PageTitle>
 
@@ -32,16 +33,72 @@ else
             </tr>
         </tbody>
     </table>
+
+    <h4>Rental Details</h4>
+    <table class="table table-hover table-border">
+        <thead>
+            <tr>
+                <th>ReadingNumber</th>
+                <th>RentalTime</th>
+                <th>ReturnDeadline</th>
+                <th></th>
+            </tr>
+        </thead>
+        @if (Rental == null)
+        {
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                        <label for="readingNumber">Reading Number:</label>
+                        <input type="text" class="form-control" id="readingNumber" @bind="@Rental.ReadingNumber" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label for="rentalTime">Rental Time:</label>
+                            <input type="text" class="form-control" id="rentalTime" @bind="@Rental.RentalTime" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label for="returnDeadline">Return Deadline:</label>
+                            <input type="text" class="form-control" id="returnDeadline" @bind="@Rental.ReturnDeadline" />
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" style="margin-top: 1.5em" @*@onclick="SubmitRentalDetails"*@>Submit</button>
+                    </td>
+                </tr>
+            </tbody>
+        }
+        else
+        {
+            <tbody>
+                <tr>
+                    <td>@Rental.ReadingNumber</td>
+                    <td>@Rental.RentalTime.ToShortDateString()</td>
+                    <td>@Rental.ReturnDeadline.ToShortDateString()</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @*@onclick="DeleteRentalDetails"*@>Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        }
+    </table>
 }
 
 @code {
+
     [Parameter]
     public int Id { get; set; }
 
     private Book? Book { get; set; }
+    private Rental? Rental { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Book = await BookService.GetBookByIdAsync(Id);
+        Rental = await RentalService.GetRentalByIdAsync(Id);
     }
 }
