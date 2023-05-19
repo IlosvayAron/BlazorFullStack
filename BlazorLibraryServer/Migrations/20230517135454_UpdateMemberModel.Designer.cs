@@ -4,6 +4,7 @@ using BlazorLibraryServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorLibraryServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230517135454_UpdateMemberModel")]
+    partial class UpdateMemberModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace BlazorLibraryServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BlazorFullStack.Contract.Member", b =>
@@ -78,7 +80,7 @@ namespace BlazorLibraryServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members", (string)null);
+                    b.ToTable("Members");
                 });
 
             modelBuilder.Entity("BlazorFullStack.Contract.Rental", b =>
@@ -103,7 +105,7 @@ namespace BlazorLibraryServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rentals", (string)null);
+                    b.ToTable("Rentals");
                 });
 #pragma warning restore 612, 618
         }
