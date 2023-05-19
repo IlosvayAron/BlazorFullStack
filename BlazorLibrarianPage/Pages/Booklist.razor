@@ -1,6 +1,5 @@
 ﻿@page "/booklist"
 @using BlazorFullStack.Contract
-@using BlazorLibrarianPage.Services
 @inject IBookService BookService
 
 <PageTitle>Booklist</PageTitle>
@@ -39,6 +38,7 @@ else
             }
         </tbody>
     </table>
+    <a href="addbook" class="btn btn-primary">Add Book</a>
 }
 
 @code {

@@ -1,6 +1,5 @@
 ﻿@page "/book/{id:int}"
 @using BlazorFullStack.Contract
-@using BlazorLibrarianPage.Services
 @inject IBookService BookService
 @inject IRentalService RentalService
 @inject NavigationManager NavigationManager
@@ -51,6 +50,7 @@ else
             <div class="form-group">
                 <label for="returnDeadline">Return Deadline:</label>
                 <InputDate class="form-control" id="returnDeadline" @bind-Value="ReturnDeadline" />
+                <ValidationMessage For="() => ReturnDeadline" />
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
@@ -97,7 +97,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         Book = await BookService.GetBookByIdAsync(Id);
-        Rental = await RentalService.GetRentalByIdAsync(Id);
+        Rental = await RentalService.GetRentalByIdAsync(Book.InventoryNumber);
         editContext = new EditContext(Rental ?? new Rental());
     }
 

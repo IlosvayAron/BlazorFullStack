@@ -1,0 +1,46 @@
+﻿@page "/addBook"
+@using BlazorFullStack.Contract
+@inject IBookService BookService
+@inject NavigationManager NavigationManager
+
+<h3>AddBook</h3>
+
+<EditForm Model="@Book" OnValidSubmit="@AddBookAsync">
+    <DataAnnotationsValidator />
+    <div class="form-group mb-2">
+        <label for="title">Title:</label>
+        <InputText class="form-control" id="title" @bind-Value="Book.Title" />
+        <ValidationMessage For="() => Book.Title" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="author">Author:</label>
+        <InputText class="form-control" id="author" @bind-Value="Book.Author" />
+        <ValidationMessage For="() => Book.Author" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="publisher">Publisher:</label>
+        <InputText class="form-control" id="publisher" @bind-Value="Book.Publisher" />
+        <ValidationMessage For="() => Book.Publisher" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="inventoryNumber">InventoryNumber:</label>
+        <InputNumber class="form-control" id="inventoryNumber" @bind-Value="Book.InventoryNumber" />
+        <ValidationMessage For="() => Book.InventoryNumber" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="publishYear">PublishYear:</label>
+        <InputNumber class="form-control" id="publishYear" @bind-Value="Book.PublishYear" />
+        <ValidationMessage For="() => Book.PublishYear" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Book</button>
+</EditForm>
+
+@code {
+    private Book Book { get; set; } = new();
+
+    private async Task AddBookAsync()
+    {
+        await BookService.AddBookAsync(Book!);
+        NavigationManager.NavigateTo("/booklist");
+    }
+}
