@@ -17,9 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Pages\BookDetails.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
+    <ProjectReference Include="..\BlazorFullStack.Contract\BlazorFullStack.Contract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="Pages\Booklist.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
