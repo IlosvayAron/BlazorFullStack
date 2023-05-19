@@ -1,80 +1,61 @@
-//using System;
-//using System.Threading.Tasks;
-//using Bunit;
-//using Xunit;
-//using BlazorLibrarianPage.Pages;
-//using BlazorFullStack.Contract;
-//using BlazorLibrarianPage.Services;
-//using Microsoft.AspNetCore.Components;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-//using Moq;
-//using Castle.Core.Resource;
+using Bunit;
+using BlazorLibrarianPage.Pages;
 
-//namespace BlazorLibrarianPage.Tests
-//{
-//    [TestClass]
-//    public class AddCustomerTests
-//    {
-//        [TestMethod]
-//        public async Task AddCustomer_ValidName()
-//        {
-//            // Arrange
-//            var member = new Member();
-//            member.Name = "Test";
+namespace BlazorLibrarianPage.Tests
+{
+    public class AddCustomerTests
+    {
+        //[Fact]
+        //public void CanEnterName()
+        //{
+        //    // Arrange
+        //    var customerServiceMock = new Mock<ICustomerService>();
+        //    Member member = new Member
+        //    {
+        //        Name = "Test",
+        //        Address = "Test street 18.",
+        //        ReadingNumber = 10,
+        //        DateOfBirth = DateTime.Now,
+        //    };
+        //    customerServiceMock.Setup(x => x.AddMemberAsync(member))
+        //        .Returns(Task.FromResult(member));
 
-//            // Act
-//            await CustomerService.AddMemberAsync(member);
-
-//            // Assert
-//            Assert.AreEqual("Test", member.Name);
-//        }
-
-//        [Fact]
-//        public async Task AddCustomer_InValidName()
-//        {
-//            // Arrange
-//            var member = new Member();
+        //    var customer = new Member();
+        //    // Act
 
 
-//            // Act
-//            member.Name = "      ";
+        //    // Assert
+        //}
 
-//            // Assert
-//            Assert.Equal(member.Name, "      ");
-//        }
-//    }
+        [Fact]
+        public void CanEnterName()
+        {
+            // Arrange
+            using var ctx = new TestContext();
+            var cut = ctx.RenderComponent<AddCustomerPage>();
+            var paraElm = cut.Find("Name");
 
-//    // Mock implementation of ICustomerService
-//    public class MockCustomerService : ICustomerService
-//    {
-//        public List<Member> AddedMembers { get; } = new List<Member>();
+            // Act
+            cut.Find("button").Click();
+            var paraElmText = paraElm.TextContent;
 
-//        public Task AddMemberAsync(Member member)
-//        {
-//            AddedMembers.Add(member);
-//            return Task.CompletedTask;
-//        }
+            // Assert
+        }
 
-//        public Task<IEnumerable<Member>?> GetAllMembersAsync()
-//        {
-//            throw new NotImplementedException();
-//        }
+        [Fact]
+        public void CounterShouldIncrementWhenSelected()
+        {
+            // Arrange
+            using var ctx = new TestContext();
+            var cut = ctx.RenderComponent<Counter>();
+            var paraElm = cut.Find("p");
 
-//        public Task<Member?> GetMemberByIdAsync(int id)
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
+            // Act
+            cut.Find("button").Click();
+            var paraElmText = paraElm.TextContent;
 
-//    // Mock implementation of NavigationManager
-//    public class MockNavigationManager : NavigationManager
-//    {
-//        public string NavigatedTo { get; private set; }
-
-//        protected override void NavigateToCore(string uri, bool forceLoad)
-//        {
-//            NavigatedTo = uri;
-//        }
-//    }
-//}
+            // Assert
+            paraElmText.MarkupMatches("Current count: 1");
+        }
+    }
+}
