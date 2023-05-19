@@ -30,20 +30,7 @@
 </EditForm>
 
 @code {
-    //private Customer Customer = new Customer();
-    private Member? Customer { get; set; }
-
-    //public class Customer
-    //{
-    //    [MaxLength(15, ErrorMessage="Max 15 characters.")]
-    //    [Required(ErrorMessage = "Please enter a name.")]
-    //    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name can only contain alphabetical characters.")]
-    //    public string Name { get; set; }
-    //    public string Address { get; set; }
-    //    [RegularExpression("^[0-9]*$", ErrorMessage = "The {0} field must contain only numbers.")]
-    //    public string ReadingNumber { get; set; }
-    //    public DateTime DateOfBirth { get; set; }
-    //}
+    private Member Customer { get; set; } = new();
 
     private async Task AddCustomerAsync()
     {
