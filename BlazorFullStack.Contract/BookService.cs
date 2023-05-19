@@ -1,7 +1,6 @@
-﻿using BlazorFullStack.Contract;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
-namespace BlazorLibrarianPage.Services
+namespace BlazorFullStack.Contract
 {
     public class BookService : IBookService
     {
@@ -15,5 +14,7 @@ namespace BlazorLibrarianPage.Services
         public Task<IEnumerable<Book>?> GetAllBooksAsync() => _httpClient.GetFromJsonAsync<IEnumerable<Book>>("api/Books");
 
         public Task<Book?> GetBookByIdAsync(int id) => _httpClient.GetFromJsonAsync<Book?>($"api/Books/{id}");
+
+        public async Task AddBookAsync(Book book) => await _httpClient.PostAsJsonAsync("api/Books", book);
     }
 }

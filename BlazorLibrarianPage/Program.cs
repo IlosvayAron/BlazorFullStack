@@ -1,5 +1,5 @@
+using BlazorFullStack.Contract;
 using BlazorLibrarianPage;
-using BlazorLibrarianPage.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

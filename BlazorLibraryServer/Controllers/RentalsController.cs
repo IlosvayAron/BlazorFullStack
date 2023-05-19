@@ -24,10 +24,23 @@ namespace BlazorLibraryServer.Controllers
             return Ok(rentals);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Rental>> Get(int id)
+        [HttpGet("{inventoryNumber}")]
+        public async Task<ActionResult<Rental>> GetRentalsByInventoryNumber(int inventoryNumber)
         {
-            var rental = await _dbContext.Rentals.FindAsync(id);
+            var rental = await _dbContext.Rentals.Where(x => x.InventoryNumber == inventoryNumber).FirstOrDefaultAsync();
+
+            if (rental is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(rental);
+        }
+
+        [HttpGet("member/{readingNumber}")]
+        public async Task<ActionResult<IEnumerable<Rental>>> GetRentalsByreadingNumber(int readingNumber)
+        {
+            var rental = await _dbContext.Rentals.Where(x => x.ReadingNumber == readingNumber).ToListAsync();
 
             if (rental is null)
             {
@@ -40,6 +53,11 @@ namespace BlazorLibraryServer.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Rental rental)
         {
+            if (rental.ReturnDeadline <= rental.RentalTime)
+            {
+                return BadRequest("The Return Deadline must be a date later than the Rental Time.");
+            }
+
             _dbContext.Rentals.Add(rental);
             await _dbContext.SaveChangesAsync();
 
@@ -51,7 +69,7 @@ namespace BlazorLibraryServer.Controllers
         {
             if (id != rental.Id)
             {
-                return BadRequest();
+                return BadRequest("Rental with this ID do not exist.");
             }
 
             var existingRental = await _dbContext.Rentals.FindAsync(id);

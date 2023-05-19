@@ -1,8 +1,7 @@
-﻿using BlazorFullStack.Contract;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
 
-namespace BlazorLibrarianPage.Services
+namespace BlazorFullStack.Contract
 {
     public class RentalService : IRentalService
     {
@@ -18,6 +17,8 @@ namespace BlazorLibrarianPage.Services
         public async Task DeleteRentalAsync(int id) => await _httpClient.DeleteAsync($"api/Rentals/{id}");
 
         public Task<IEnumerable<Rental>?> GetAllRentalsAsync() => _httpClient.GetFromJsonAsync<IEnumerable<Rental>?>("api/Rentals");
+
+        public Task<IEnumerable<Rental>?> GetRentalsByReadingNumberAsync(int readingNumber) => _httpClient.GetFromJsonAsync<IEnumerable<Rental>?>($"api/Rentals/member/{readingNumber}");
 
         public async Task<Rental?> GetRentalByIdAsync(int id)
         {

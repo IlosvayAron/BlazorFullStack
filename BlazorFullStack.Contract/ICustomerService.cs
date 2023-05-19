@@ -1,6 +1,4 @@
-﻿using BlazorFullStack.Contract;
-
-namespace BlazorLibrarianPage.Services
+﻿namespace BlazorFullStack.Contract
 {
     public interface ICustomerService
     {

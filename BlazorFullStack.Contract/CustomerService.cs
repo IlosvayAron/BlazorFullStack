@@ -1,7 +1,6 @@
-﻿using BlazorFullStack.Contract;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
-namespace BlazorLibrarianPage.Services
+namespace BlazorFullStack.Contract
 {
     public class CustomerService : ICustomerService
     {

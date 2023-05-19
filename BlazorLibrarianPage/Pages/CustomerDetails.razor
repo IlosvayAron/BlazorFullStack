@@ -1,7 +1,7 @@
 ﻿@page "/Customer/{id:int}"
 @using BlazorFullStack.Contract
-@using BlazorLibrarianPage.Services
 @inject ICustomerService CustomerService
+@inject IRentalService RentalService
 
 <PageTitle>CustomerDetails</PageTitle>
 
@@ -30,38 +30,41 @@ else
             </tr>
         </tbody>
     </table>
-    @*<h3>Rental details</h3>
-    @foreach (var (rental, Customerr, book) in rentals.Zip(Customers, books))
+    <h3>Rental details</h3>
+    @if (Rentals is null) {
+
+    }
+    else
     {
-        @if (Customerr.ReadingNumber == Customer.ReadingNumber)
-        {
-            <table class="table table-hover table-border">
-                <thead>
+        <table class="table table-hover table-border">
+            <thead>
+                <tr>
+                    <th>Reading number</th>
+                    <th>Inventory number</th>
+                    <th>Time of rental</th>
+                    <th>Returnal deadline</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var rental in Rentals)
+                {
                     <tr>
-                        <th>Reading number</th>
-                        <th>Inventory number</th>
-                        <th>Time of rental</th>
-                        <th>Returnal deadline</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@Customerr.ReadingNumber</td>
-                        <td>@book.InventoryNumber</td>
+                        <td>@Customer.ReadingNumber</td>
+                        <td>@rental.InventoryNumber</td>
                         <td>@rental.RentalTime.ToShortDateString()</td>
-                        @if (rental.ReturnDeadline > DateTime.Today)
+                        @if (rental.ReturnDeadline < DateTime.Today)
                         {
-                            <td style="color: red">@rental.ReturnDeadline.ToShortDateString()</td>
+                            <td style="color: red">@rental.ReturnDeadline.ToShortDateString() <span class="badge bg-secondary">You have exceeded the deadline!</span></td>
                         }
                         else
                         {
                             <td>@rental.ReturnDeadline.ToShortDateString()</td>
                         }
                     </tr>
-                </tbody>
-            </table>
-        }
-    }*@
+                }
+            </tbody>
+        </table>
+    }
 }
 
 <style>
@@ -77,9 +80,11 @@ else
     public int Id { get; set; }
 
     private Member? Customer { get; set; }
+    private IEnumerable<Rental>? Rentals { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Customer = await CustomerService.GetMemberByIdAsync(Id);
+        Rentals = await RentalService.GetRentalsByReadingNumberAsync(Customer.ReadingNumber);
     }
 }
