@@ -3,30 +3,26 @@
 @using BlazorLibrarianPage.Services
 @inject ICustomerService CustomerService
 @inject NavigationManager NavigationManager
-@*@inject HttpClient Http
-@using System.Text.Json;
-@using System.ComponentModel.DataAnnotations;
-@using static BlazorLibrarianPage.Pages.Customerlist;*@
 
 <h3>AddCustomer</h3>
 
 <EditForm Model="@Customer" OnValidSubmit="@AddCustomerAsync">
     <DataAnnotationsValidator />
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label for="name">Name:</label>
         <InputText class="form-control" id="name" @bind-Value="Customer.Name" />
         <ValidationMessage For="() => Customer.Name" />
     </div>
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label for="address">Address:</label>
         <InputText class="form-control" id="address" @bind-Value="Customer.Address" />
     </div>
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label for="readingNumber">Reading Number:</label>
         <InputNumber class="form-control" id="readingNumber" @bind-Value="Customer.ReadingNumber" />
         <ValidationMessage For="() => Customer.ReadingNumber" />
     </div>
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label for="dateOfBirth">Date of Birth:</label>
         <InputDate class="form-control" id="dateOfBirth" @bind-Value="Customer.DateOfBirth" />
     </div>
@@ -34,39 +30,11 @@
 </EditForm>
 
 @code {
-    //private Customer Customer = new Customer();
-    private Member? Customer { get; set; }
+    private Member Customer { get; set; } = new();
 
-    //public class Customer
-    //{
-    //    [MaxLength(15, ErrorMessage="Max 15 characters.")]
-    //    [Required(ErrorMessage = "Please enter a name.")]
-    //    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name can only contain alphabetical characters.")]
-    //    public string Name { get; set; }
-    //    public string Address { get; set; }
-    //    [RegularExpression("^[0-9]*$", ErrorMessage = "The {0} field must contain only numbers.")]
-    //    public string ReadingNumber { get; set; }
-    //    public DateTime DateOfBirth { get; set; }
-    //}
-
-    // In your AddCustomer page
     private async Task AddCustomerAsync()
     {
         await CustomerService.AddMemberAsync(Customer!);
         NavigationManager.NavigateTo("/customerlist");
-
-        // Read the existing Customers from the JSON file
-        //string json = await File.ReadAllTextAsync("sample-data/Customer.json");
-        //var Customers = JsonSerializer.Deserialize<Customer[]>(json);
-
-        // Add the new Customer to the array
-        //Array.Resize(ref Customers, Customers.Length + 1);
-        //Customers[Customers.Length - 1] = Customer;
-
-        // Serialize the updated array back to JSON
-        //json = JsonSerializer.Serialize(Customers);
-
-        // Write the JSON back to the file
-        //await File.WriteAllTextAsync("sample-data/Customer.json", json);
     }
 }
